@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('{% static "images/background.jpg" %}') center/cover no-repeat;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(4, 150px); /* Increase the button size */
+            gap: 20px; /* Increase the gap between buttons */
+        }
+
+        .square-button {
+            width: 150px; /* Increase the button width */
+            height: 150px; /* Increase the button height */
+            background-color: #cfe2f3;
+            border: 2px solid #eeeeee; /* Add a 2px solid border with a different color */
+            color: #5b5b5b;
+            font-size: 18px; /* Increase the font size */
+            cursor: pointer;
+        }
+
+        .container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .navbar-link {
+            color: #ffffff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+    </style>
+    <title>Button Grid with Background Photo</title>
+</head>
+<body>
+    <div class="container">
+        {% if user.is_authenticated %}
+            <a class="navbar-link" href="{% url 'main:logout' %}">Logout</a>
+        {% else %}
+            <a class="navbar-link" href="{% url 'main:login' %}">Login</a>
+        {% endif %}
+    </div>
+
+    <div class="button-container">
+        <button class="square-button" onclick="window.location.href='{% url 'vendor:AXvenderSearch' %}'">Vendor</button>
+        <button class="square-button">TBD</button>
+        <button class="square-button">TBD</button>
+        <button class="square-button">TBD</button>
+        <button class="square-button">TBD</button>
+        <button class="square-button">TBD</button>
+        <button class="square-button">TBD</button>
+        <button class="square-button">TBD</button>
+    </div>
+</body>
+</html>
+
+

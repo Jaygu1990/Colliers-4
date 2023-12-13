@@ -1,0 +1,38 @@
+{% extends "vendor/vendorBase.html" %}
+{% block body_block %}
+    <h1>Vendor setup request pending</h1>
+    <div style="text-align: right; margin-bottom: 10px;">
+        <a href="{% url 'vendor:createRequest' %}" class="button" style="background-color: blue; color: white; text-decoration: none; display: inline-block; padding: 10px 20px; border-radius: 5px;">Create a Vendor Request</a>
+
+    </div>
+    {% if vendor_requests %}
+    <table class="excel-like-table" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Deal Number</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 400px;">Vendor Name</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;">Vendor Address</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 40px;">Request Person</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Date</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Action</th>
+        </tr>
+
+        {% for request in vendor_requests %}
+            {% if request.status == 'pending for setup' %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 100px;">{{ request.deal_number }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 400px;">{{ request.vendor_name }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{{ request.vendor_address }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 40px;">{{ request.request_person }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 100px;">{{ request.date }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 100px;">
+                     <a href="{% url 'vendor:setRequest' request.deal_number request.vendor_name %}" class="button" style="background-color: blue; color: white; text-decoration: none; display: inline-block; padding: 3px 10px; border-radius: 5px;">Check Details</a>
+<!--                    <button class="button" style="background-color: blue; color: white; text-decoration: none; display: inline-block; padding: 3px 10px; border-radius: 5px;">Check Details</button>-->
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endblock %}
+
+

@@ -1,0 +1,22 @@
+{% extends "vendor/vendorBase.html" %}
+{% load static %}
+{% block body_block %}
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+            <h2>Upload AX vendors</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ AXform.as_p }}
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+        <div>
+            <h2>Reorganize AX date in the format of below exmaple</h2>
+             <img src='{% static "images/Example.png" %}' alt="Exmaple image" style="max-width: 2000px;">
+        </div>
+         <div>
+         </div>
+         <div>
+         </div>
+    </div>
+{% endblock %}

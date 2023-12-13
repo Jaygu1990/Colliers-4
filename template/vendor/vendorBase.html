@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        nav {
+            background-color: #3498db;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px; /* Increased padding for larger buttons */
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+    </style>
+    <title>Your Base Page</title>
+</head>
+<body>
+
+<nav>
+    <a href="{% url 'vendor:pending' %}">Vendor Request Pending</a>
+    <a href="{% url 'vendor:reviewing' %}">Vendor Request for review</a>
+    <a href="{% url 'vendor:licensemanagement' %}">Vendor Management</a>
+    <a href="{% url 'vendor:AXvenderSearch' %}">Vendor Search</a>
+    <a href= "{% url 'main:main' %}">Back to Main Page</a>
+</nav>
+    <div id="content">
+        {% block body_block %}{% endblock %}
+    </div>
+
+</body>
+</html>
+
+
+
+
+

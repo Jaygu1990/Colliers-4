@@ -1,0 +1,16 @@
+.excel-like-table {
+    width: 80%;
+    margin: 20px auto; /* Center the table */
+    border-collapse: collapse;
+}
+
+.excel-like-table th, .excel-like-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.excel-like-table th {
+    background-color: #3498db;
+    color: white;
+}

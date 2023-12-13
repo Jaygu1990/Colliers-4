@@ -1,0 +1,72 @@
+{% extends "vendor/vendorBase.html" %}
+{% block body_block %}
+    <h1>Vendor license management</h1>
+    <div class="text-center mt-4">
+        <input type="text" id="filterName" class="form-control" oninput="filterTable()" placeholder="Search by Vendor Name" style="text-align: left; border: 1px solid #ddd; padding: 15px;width: 245px;">
+        <input type="text" id="filterCode" class="form-control" oninput="filterTable()" placeholder="Search by Vendor Code" style="text-align: left; border: 1px solid #ddd; padding: 15px;width: 295px;">
+        <input type="text" id="filterDate" class="form-control" oninput="filterTable()" placeholder="Search by Expiration Date(1990-1-1)" style="text-align: left; border: 1px solid #ddd; padding: 15px;width: 275px;">
+    </div>
+    {% if vendor_license %}
+    <table class="excel-like-table" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 40px;">Vendor Name</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 40px;">Vendor Code</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 40px;">Expiration Date</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 40px;">State/Province</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 40px;">Country</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 40px;">Action</th>
+        </tr>
+
+        {% for license in vendor_license %}
+        {% if license.status == 'finished' %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 40px;">{{ license.vendor_name }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 40px;">{{ license.vendor_code }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 40px;">{{ license.expiration_date }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 40px;">{{ license.State }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 40px;">{{ license.Country }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 40px;">
+                    <a href="{% url 'vendor:reviewRequest' license.deal_number license.vendor_name %}" class="button" style="background-color: blue; color: white; text-decoration: none; display: inline-block; padding: 3px 10px; border-radius: 5px;">Check Details</a>
+                </td>
+            </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+    {% endif %}
+
+ <script>
+    function filterTable() {
+        var filterName = document.getElementById("filterName").value.toUpperCase();
+        var filterCode = document.getElementById("filterCode").value.toUpperCase();
+        var filterDate = document.getElementById("filterDate").value;
+
+        // Convert the input date to a JavaScript Date object
+        var filterDateObject = filterDate ? new Date(filterDate) : null;
+
+        var table = document.querySelector(".excel-like-table");
+        var tr = table.getElementsByTagName("tr");
+
+        for (var i = 1; i < tr.length; i++) {
+            var showRow = true;  // Assume the row should be displayed
+
+            var nameColumn = tr[i].cells[0];
+            var codeColumn = tr[i].cells[1];
+            var dateColumn = tr[i].cells[2];
+
+            var nameText = nameColumn ? nameColumn.textContent || nameColumn.innerText : '';
+            var codeText = codeColumn ? codeColumn.textContent || codeColumn.innerText : '';
+            var dateText = dateColumn ? dateColumn.textContent || dateColumn.innerText : '';
+
+            // Check if each column contains the respective filter text
+            if (nameText.toUpperCase().indexOf(filterName) === -1 ||
+                codeText.toUpperCase().indexOf(filterCode) === -1 ||
+                (filterDateObject && new Date(dateText) >= filterDateObject)) {
+                showRow = false;  // If any condition is not satisfied, do not display the row
+            }
+
+            tr[i].style.display = showRow ? "" : "none";
+        }
+    }
+</script>
+
+{% endblock %}

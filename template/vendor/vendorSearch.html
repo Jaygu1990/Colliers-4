@@ -1,0 +1,67 @@
+{% extends "vendor/vendorBase.html" %}
+{% block body_block %}
+
+<div class="container">
+    <a href="{% url 'vendor:upload_excel' %}" class="button" style="background-color: blue; color: white; text-decoration: none; display: inline-block; padding: 10px 20px; border-radius: 5px;">Upload AX Data</a>
+</div>
+
+<h1>AX vendor address search</h1>
+
+<div class="text-center mt-4">
+    <input type="text" id="filterName" class="form-control" oninput="filterTable('filterName')" placeholder="Search by Vendor Name" style="text-align: left; border: 1px solid #ddd; padding: 15px;width: 310px;">
+    <input type="text" id="filterCode" class="form-control" oninput="filterTable('filterCode')" placeholder="Search by AX Code" style="text-align: left; border: 1px solid #ddd; padding: 15px;width: 265px;">
+    <input type="text" id="filterAddress" class="form-control" oninput="filterTable('filterAddress')" placeholder="Search by Vendor Address" style="text-align: left; border: 1px solid #ddd; padding: 15px;width: 800px;">
+</div>
+
+{% if AXvendors %}
+<table class="excel-like-table" style="width: 100%; border-collapse: collapse;">
+    <tr>
+        <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Vendor Name</th>
+        <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 30px;">AX Code</th>
+        <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 400px;">Vendor Address</th>
+    </tr>
+
+    {% for vendor in AXvendors %}
+        <tr class="vendor-row">
+            <td style="border: 1px solid #ddd; padding: 8px;width: 100px;">{{ vendor.vendor_name }}</td>
+            <td style="border: 1px solid #ddd; padding: 8px;width: 30px;">{{ vendor.vendor_code }}</td>
+            <td style="border: 1px solid #ddd; padding: 8px;width: 400px;">{{ vendor.vendor_address }}</td>
+        </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+<script>
+    function filterTable() {
+        var filterName = document.getElementById("filterName").value.toUpperCase();
+        var filterCode = document.getElementById("filterCode").value.toUpperCase();
+        var filterAddress = document.getElementById("filterAddress").value.toUpperCase();
+
+        var table = document.querySelector(".excel-like-table");
+        var tr = table.getElementsByClassName("vendor-row");
+
+        for (var i = 0; i < tr.length; i++) {
+            var showRow = true;  // Assume the row should be displayed
+
+            var nameColumn = tr[i].cells[0];
+            var codeColumn = tr[i].cells[1];
+            var addressColumn = tr[i].cells[2];
+
+            var nameText = nameColumn ? nameColumn.textContent || nameColumn.innerText : '';
+            var codeText = codeColumn ? codeColumn.textContent || codeColumn.innerText : '';
+            var addressText = addressColumn ? addressColumn.textContent || addressColumn.innerText : '';
+
+            // Check if each column contains the respective filter text
+            if (nameText.toUpperCase().indexOf(filterName) === -1 ||
+                codeText.toUpperCase().indexOf(filterCode) === -1 ||
+                addressText.toUpperCase().indexOf(filterAddress) === -1) {
+                showRow = false;  // If any condition is not satisfied, do not display the row
+            }
+
+            tr[i].style.display = showRow ? "" : "none";
+        }
+    }
+</script>
+
+{% endblock %}
+

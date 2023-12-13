@@ -1,0 +1,31 @@
+{% extends "vendor/vendorBase.html" %}
+{% block body_block %}
+    <h1>Vendor setup review pending</h1>
+    {% if vendor_reviews %}
+    <table class="excel-like-table" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Deal Number</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 400px;">Vendor Name</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;">Vendor Address</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 40px;">Request Person</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Date</th>
+            <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Action</th>
+        </tr>
+
+        {% for review in vendor_reviews %}
+            {% if review.status == 'pending for review' %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 100px;">{{ review.deal_number }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 400px;">{{ review.vendor_name }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{{ review.vendor_address }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 40px;">{{ review.request_person }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 100px;">{{ review.date }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 100px;">
+                    <a href="{% url 'vendor:reviewRequest' review.deal_number review.vendor_name %}" class="button" style="background-color: blue; color: white; text-decoration: none; display: inline-block; padding: 3px 10px; border-radius: 5px;">Check Details</a>
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endblock %}
