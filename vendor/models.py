@@ -9,10 +9,6 @@ class UserProfileInfo(models.Model):
 
 
 
-
-
-
-
 # Create your models here.
 def upload_to_w9(instance, filename):
     return f'media/PDF/W9/{filename}'

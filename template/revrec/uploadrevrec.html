@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        nav {
+            background-color: #3498db;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px; /* Increased padding for larger buttons */
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+    </style>
+    <title>Colliers Commission Team</title>
+  <nav>
+    <a href="{% url 'revrec:revrec' %}">Rev Rec List</a>
+    <a href="{% url 'revrec:tested' %}">Tested Rev Rec List</a>
+    <a href="{% url 'main:main' %}">Back to Main Page</a>
+</nav>
+</head>
+<body>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ revrecform.as_p }}
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+        <div>
+            <h2>Reorganize AX date in the format of below exmaple</h2>
+             <img src='{% static "images/Example2.png" %}' alt="Exmaple image" style="max-width: 2000px;">
+        </div>
+         <div>
+         </div>
+         <div>
+         </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        nav {
+            background-color: #3498db;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px; /* Increased padding for larger buttons */
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+    </style>
+    <title>Colliers Commission Team</title>
+
+    <nav>
+    <a href="{% url 'revrec:revrec' %}">Rev Rec List</a>
+    <a href="{% url 'revrec:tested' %}">Tested Rev Rec List</a>
+    <a href="{% url 'main:main' %}">Back to Main Page</a>
+</nav>
+</head>
+<body>
+
+
+
+    <div class="text-center mt-4">
+        <input type="text" id="name" class="form-control" oninput="filterTable()" placeholder="Search by Name" style="text-align: left; border: 1px solid #ddd; padding: 15px;width: 245px;margin-top: 10px;margin-bottom: 10px;">
+        <input type="text" id="deal" class="form-control" oninput="filterTable()" placeholder="Search by Deal" style="text-align: left; border: 1px solid #ddd; padding: 15px;width: 295px;margin-top: 10px;margin-bottom: 10px;">
+        <input type="text" id="startDate" class="form-control" oninput="filterTable()" placeholder="Start Date (1990-01-01)" style="text-align: left; border: 1px solid #ddd; padding: 15px; width: 275px;margin-top: 10px;margin-bottom: 10px;">
+        <input type="text" id="endDate" class="form-control" oninput="filterTable()" placeholder="End Date (1990-01-01)" style="text-align: left; border: 1px solid #ddd; padding: 15px; width: 275px;margin-top: 10px;margin-bottom: 10px;">
+
+    </div>
+
+
+<div id="content">
+
+      {% if revrecs %}
+        <table id='revrectable' class="excel-like-table" style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 50px;">Name</th>
+                <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 50px;">Deal</th>
+                <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Due Date</th>
+                <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 400px;">Note</th>
+                <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Assign Status</th>
+                <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Test Status</th>
+            </tr>
+
+        {% for revrec in revrecs %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px; width: 50px;">{{ revrec.name }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; width: 50px;">{{ revrec.deal }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; width: 100px;">{{ revrec.due_date }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; width: 400px;">{{ revrec.note }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; width: 100px;">{{ revrec.assign_status }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; width: 100px;">{{ revrec.test_status }}</td>
+            </tr>
+        {% endfor %}
+          </table>
+    {% endif %}
+
+</div>
+
+<script>
+    function filterTable() {
+        var filterName = document.getElementById("name").value.toUpperCase();
+        var filterDeal = document.getElementById("deal").value.toUpperCase();
+        var filterStartDate = document.getElementById("startDate").value;
+        var filterEndDate = document.getElementById("endDate").value;
+        console.log('Parsed Start Date:', filterStartDateObject);
+        console.log('Parsed End Date:', filterEndDateObject);
+        // Convert the input dates to JavaScript Date objects
+        var filterStartDateObject = filterStartDate ? new Date(filterStartDate) : null;
+        var filterEndDateObject = filterEndDate ? new Date(filterEndDate) : null;
+
+        var table = document.querySelector(".excel-like-table");
+        var tr = table.getElementsByTagName("tr");
+
+        for (var i = 1; i < tr.length; i++) {
+            var showRow = true;  // Assume the row should be displayed
+
+            var nameColumn = tr[i].cells[0];
+            var dealColumn = tr[i].cells[1];
+            var dateColumn = tr[i].cells[2];
+
+            var nameText = nameColumn ? nameColumn.textContent || nameColumn.innerText : '';
+            var dealText = dealColumn ? dealColumn.textContent || dealColumn.innerText : '';
+            var dateText = dateColumn ? dateColumn.textContent || dateColumn.innerText : '';
+
+            // Convert the date text to a JavaScript Date object
+            var rowDateObject = dateText ? new Date(dateText) : null;
+
+            // Check if each column contains the respective filter text
+            if (nameText.toUpperCase().indexOf(filterName) === -1 ||
+                dealText.toUpperCase().indexOf(filterDeal) === -1 ||
+                (filterStartDateObject && rowDateObject < filterStartDateObject) ||
+                (filterEndDateObject && rowDateObject > filterEndDateObject)) {
+                showRow = false;  // If any condition is not satisfied, do not display the row
+            }
+
+            tr[i].style.display = showRow ? "" : "none";
+        }
+    }
+</script>
+
+</body>
+</html>

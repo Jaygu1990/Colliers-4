@@ -104,7 +104,7 @@ def upload_excel(request):
             filename = fs.get_available_name(excel_file.name)
             file_path = fs.save(filename, excel_file)
 
-            success, message = process_excel_file(file_path)
+            success, message = process_excel_file(excel_file)
 
             if success:
                 return pending(request)

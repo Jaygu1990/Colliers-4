@@ -24,7 +24,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("main.urls")),
-    path('vendor/',include("vendor.urls"))
+    path('vendor/',include("vendor.urls")),
+    path('responsibility/',include("responsibility.urls")),
+    path('revrec/',include("revrec.urls"))
 
 ]
 if settings.DEBUG:

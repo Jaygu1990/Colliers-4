@@ -13,7 +13,6 @@
     <input type="text" id="filterAddress" class="form-control" oninput="filterTable('filterAddress')" placeholder="Search by Vendor Address" style="text-align: left; border: 1px solid #ddd; padding: 15px;width: 800px;">
 </div>
 
-{% if AXvendors %}
 <table class="excel-like-table" style="width: 100%; border-collapse: collapse;">
     <tr>
         <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 100px;">Vendor Name</th>
@@ -21,47 +20,58 @@
         <th style="text-align: left; border: 1px solid #ddd; padding: 8px;width: 400px;">Vendor Address</th>
     </tr>
 
-    {% for vendor in AXvendors %}
-        <tr class="vendor-row">
-            <td style="border: 1px solid #ddd; padding: 8px;width: 100px;">{{ vendor.vendor_name }}</td>
-            <td style="border: 1px solid #ddd; padding: 8px;width: 30px;">{{ vendor.vendor_code }}</td>
-            <td style="border: 1px solid #ddd; padding: 8px;width: 400px;">{{ vendor.vendor_address }}</td>
-        </tr>
-    {% endfor %}
+    {% if AXvendors %}
+        {% for vendor in AXvendors %}
+            <tr class="vendor-row">
+                <td style="border: 1px solid #ddd; padding: 8px;width: 100px;">{{ vendor.vendor_name }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 30px;">{{ vendor.vendor_code }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;width: 400px;">{{ vendor.vendor_address }}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
 </table>
-{% endif %}
-
 <script>
     function filterTable() {
         var filterName = document.getElementById("filterName").value.toUpperCase();
         var filterCode = document.getElementById("filterCode").value.toUpperCase();
         var filterAddress = document.getElementById("filterAddress").value.toUpperCase();
 
-        var table = document.querySelector(".excel-like-table");
-        var tr = table.getElementsByClassName("vendor-row");
+        // Send AJAX request to the server
+        var xhr = new XMLHttpRequest();
+        var url = "{% url 'vendor:AXvenderSearch' %}?filter_name=" + filterName + "&filter_code=" + filterCode + "&filter_address=" + filterAddress;
+        xhr.open("GET", url, true);
 
-        for (var i = 0; i < tr.length; i++) {
-            var showRow = true;  // Assume the row should be displayed
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // Create a temporary div element to parse the server response
+                    var tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = xhr.responseText;
 
-            var nameColumn = tr[i].cells[0];
-            var codeColumn = tr[i].cells[1];
-            var addressColumn = tr[i].cells[2];
+                    // Extract the table body content from the parsed response
+                    var tableBodyContent = tempDiv.querySelector(".excel-like-table tbody").innerHTML;
 
-            var nameText = nameColumn ? nameColumn.textContent || nameColumn.innerText : '';
-            var codeText = codeColumn ? codeColumn.textContent || codeColumn.innerText : '';
-            var addressText = addressColumn ? addressColumn.textContent || addressColumn.innerText : '';
-
-            // Check if each column contains the respective filter text
-            if (nameText.toUpperCase().indexOf(filterName) === -1 ||
-                codeText.toUpperCase().indexOf(filterCode) === -1 ||
-                addressText.toUpperCase().indexOf(filterAddress) === -1) {
-                showRow = false;  // If any condition is not satisfied, do not display the row
+                    // Update the table body with the extracted content
+                    var tableBody = document.querySelector(".excel-like-table tbody");
+                    tableBody.innerHTML = tableBodyContent;
+                } else {
+                    console.error("Error fetching data from the server");
+                }
             }
-
-            tr[i].style.display = showRow ? "" : "none";
-        }
+        };
+        xhr.send();
     }
+
+    // Add event listeners
+    document.getElementById("filterName").addEventListener("input", filterTable);
+    document.getElementById("filterCode").addEventListener("input", filterTable);
+    document.getElementById("filterAddress").addEventListener("input", filterTable);
 </script>
 
+
+
+
+
 {% endblock %}
+
 
